@@ -24,6 +24,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 - React.js
 
 
-## Deployed on Vercel
+## Deployed on Render
+
+https://test-demo-rlgc.onrender.com
 
 
