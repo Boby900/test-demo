@@ -9,15 +9,11 @@ function Dropdown() {
   const [bgToggled, setBgToggled] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [innerBgToggled, setInnerBgToggled] = useState(false);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
   const toggleBackgroundColor = () => {
     setBgToggled(!bgToggled);
-  };
-  const innerBackgroundColorToggler = () => {
-    setInnerBgToggled(!innerBgToggled);
   };
 
   useEffect(() => {
@@ -35,9 +31,40 @@ function Dropdown() {
         console.error(err);
       }
     };
-
     fetchNotifications();
   }, []);
+
+
+  const toggleNotificationReadStatus = async (id: number) => {
+    try {
+      const res = await fetch('/api', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ id }), 
+      });
+
+      if (res.ok) {
+        const updatedNotification = await res.json();
+        console.log(updatedNotification)
+        setNotifications((prevNotifications) =>
+          prevNotifications.map((notification) =>
+            notification.id === id
+              ? { ...notification, isRead: !notification.isRead }
+              : notification
+          )
+        );
+
+      } else {
+        console.error('Failed to update notification status');
+      }
+    } catch (err) {
+      console.error('Error while toggling notification status', err);
+    }
+  };
+
+
 
   return (
     <div>
@@ -46,7 +73,6 @@ function Dropdown() {
           <BellDot />
         </a>
       </button>
-
       {isOpen && (
         <div className="flex flex-col max-w-[300px] gap-4 bg-gray-600 p-4 m- absolute  right-[50px] sm:right-[150px] top-[70px]  ">
           <div>
@@ -69,19 +95,15 @@ function Dropdown() {
                 {notifications.map((notification) => (
                   <li className="p-2 border" key={notification.id}>
                     <div
-                      className={`p-4 transition-colors duration-500 ${
-                        innerBgToggled ? "bg-gray-400" : "bg-gray-800"
-                      }`}
+
                     >
                       <strong>{notification.type}</strong>:{" "}
                       {notification.content}
                     </div>
                     <div className="">
                       <button
-                        onClick={innerBackgroundColorToggler}
-                        title={`${
-                          innerBgToggled ? "Mark as unread" : "Mark as read"
-                        }`}
+                        onClick={()=>{console.log("Notification ID:", notification.id);toggleNotificationReadStatus(notification.id)}}
+
                       >
                         <MailOpen />
                       </button>
@@ -96,5 +118,4 @@ function Dropdown() {
     </div>
   );
 }
-
 export default Dropdown;
