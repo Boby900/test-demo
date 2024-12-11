@@ -2,7 +2,7 @@
 import { BellDot } from "lucide-react";
 import { useState } from "react";
 import { useEffect } from "react";
-import type { Notification } from "./db/schema";
+import type { Notification } from "../db/schema";
 function Dropdown() {
   // const [notifications, setNotifications] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -35,22 +35,22 @@ function Dropdown() {
   }, []);
 
   return (
-    <div className="">
-      <button onClick={toggleDropdown} className="">
-        <BellDot />
+    <div>
+      <button onClick={toggleDropdown} className="relative">
+        <a href="#"><BellDot /></a>
       </button>
 
       {isOpen && (
-        <div className="flex flex-col gap-4 bg-gray-600 p-2 m-2">
+        <div className="flex flex-col max-w-[300px] gap-4 bg-gray-600 p-4 m- absolute  right-[150px] top-[70px]  ">
           <div>
-            <p>
-              <button onClick={changeBackgroundColor}>Mark all as read</button>
-            </p>
+          
+              <button className="border-2 p-2 rounded-lg bg-white text-blue-600 font-bold min-w-full" onClick={changeBackgroundColor}>Mark all as read</button>
+         
           </div>
           <div style={{ backgroundColor: bgColor }}>
-            <ul>
+            <ul className="flex flex-col gap-3">
               {notifications.map((notification) => (
-            <li key={notification.id}>
+            <li className="p-2 border" key={notification.id}>
               <strong>{notification.type}</strong>: {notification.content}
             </li>
           ))}
