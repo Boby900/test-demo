@@ -1,5 +1,5 @@
 "use client";
-import { BellDot } from "lucide-react";
+import { BellDot, MailOpen } from "lucide-react";
 import { useState } from "react";
 import { useEffect } from "react";
 import type { Notification } from "../db/schema";
@@ -9,12 +9,15 @@ function Dropdown() {
   const [bgToggled, setBgToggled] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [innerBgToggled, setInnerBgToggled] = useState(false);
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
   const toggleBackgroundColor = () => {
     setBgToggled(!bgToggled);
+  };
+  const innerBackgroundColorToggler = () => {
+    setInnerBgToggled(!innerBgToggled);
   };
 
   useEffect(() => {
@@ -51,13 +54,13 @@ function Dropdown() {
               className="border-2 p-2 rounded-lg bg-white text-blue-600 font-bold min-w-full"
               onClick={toggleBackgroundColor}
             >
-              {bgToggled?(<p>Mark all as unread</p>): (<p>Mark all as read</p>)}
+              {bgToggled ? <p>Mark all as unread</p> : <p>Mark all as read</p>}
             </button>
           </div>
-          <div 
-          className={`p-4 transition-colors duration-500 ${
-            bgToggled ? "bg-gray-400" : "bg-gray-800"
-          }`}
+          <div
+            className={`p-4 transition-colors duration-500 ${
+              bgToggled ? "bg-gray-400" : "bg-gray-800"
+            }`}
           >
             {isLoading ? (
               <p>loading...</p>
@@ -65,7 +68,24 @@ function Dropdown() {
               <ul className="flex flex-col gap-3">
                 {notifications.map((notification) => (
                   <li className="p-2 border" key={notification.id}>
-                    <strong>{notification.type}</strong>: {notification.content}
+                    <div
+                      className={`p-4 transition-colors duration-500 ${
+                        innerBgToggled ? "bg-gray-400" : "bg-gray-800"
+                      }`}
+                    >
+                      <strong>{notification.type}</strong>:{" "}
+                      {notification.content}
+                    </div>
+                    <div className="">
+                      <button
+                        onClick={innerBackgroundColorToggler}
+                        title={`${
+                          innerBgToggled ? "Mark as unread" : "Mark as read"
+                        }`}
+                      >
+                        <MailOpen />
+                      </button>
+                    </div>
                   </li>
                 ))}
               </ul>
